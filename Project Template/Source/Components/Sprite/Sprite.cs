@@ -1,9 +1,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Project_Quarry.Source.Actors;
-using Project_Quarry.Source.Temp;
+using Project_Template.Source.Actors;
+using Project_Template.Source.Temp;
 
-namespace Project_Quarry.Source.Components.Sprite {
+namespace Project_Template.Source.Components.Sprite {
     public class Sprite(string textureName) :
         ComponentBase {
         Texture2D texture;
@@ -13,7 +13,8 @@ namespace Project_Quarry.Source.Components.Sprite {
         }
 
         /// <summary>
-        ///     Calculates a pixel-space origin point on the texture based on normalized coordinates ranging from -1.0 to 1.0.
+        /// Calculates a pixel-space origin point on the texture based on normalized coordinates
+        /// ranging from one side of the bounds [-1.0] to the other side of the bounds [1.0], where origin represents 0.
         /// </summary>
         /// <param name="normalizedX">The horizontal offset from -1.0 (left) to 1.0 (right). A value of 0.0 represents the center.</param>
         /// <param name="normalizedY">The vertical offset from -1.0 (bottom) to 1.0 (top). A value of 0.0 represents the center.</param>

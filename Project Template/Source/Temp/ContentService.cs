@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Content;
 
-namespace Project_Quarry.Source.Temp {
+namespace Project_Template.Source.Temp {
     /// <summary>
     ///     TODO: Use DI for this. This is up for you to decide
     /// </summary>

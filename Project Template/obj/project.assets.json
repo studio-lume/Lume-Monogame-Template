@@ -315,11 +315,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hugod\\Documents\\Projects\\Project Quarry\\Project Template.csproj",
+      "projectUniqueName": "C:\\Users\\hugod\\Documents\\Projects\\Lume-Monogame-Template\\Project Template\\Project Template.csproj",
       "projectName": "Project Template",
-      "projectPath": "C:\\Users\\hugod\\Documents\\Projects\\Project Quarry\\Project Template.csproj",
+      "projectPath": "C:\\Users\\hugod\\Documents\\Projects\\Lume-Monogame-Template\\Project Template\\Project Template.csproj",
       "packagesPath": "C:\\Users\\hugod\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hugod\\Documents\\Projects\\Project Quarry\\obj\\",
+      "outputPath": "C:\\Users\\hugod\\Documents\\Projects\\Lume-Monogame-Template\\Project Template\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\hugod\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -1,4 +1,4 @@
-namespace Project_Quarry.Source.Data.Enums {
+namespace Project_Template.Source.Data.Enums {
     public enum DrawPassId : ushort {
         Test,
         Test2,

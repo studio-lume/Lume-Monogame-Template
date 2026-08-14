@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Project_Quarry.Source.Data.Interfaces {
+namespace Project_Template.Source.Data.Interfaces {
     public interface IActor {
         public void UpdateComponents(float deltaTime);
 

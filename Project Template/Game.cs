@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Project_Quarry.Source.Actors.Test;
-using Project_Quarry.Source.Temp;
+using Project_Template.Source.Actors.Test;
+using Project_Template.Source.Temp;
 
-namespace Project_Quarry {
+namespace Project_Template {
     public class Game : Microsoft.Xna.Framework.Game {
         readonly GraphicsDeviceManager graphics;
 
@@ -29,7 +29,7 @@ namespace Project_Quarry {
 
             for (var x = 0; x < 100; x++)
             for (var y = 0; y < 100; y++) {
-                new TestActor().transform.Position = new(x * 100, y * 100);
+                new TestActor().Transform.Position = new(x * 100, y * 100);
             }
 
             base.Initialize();

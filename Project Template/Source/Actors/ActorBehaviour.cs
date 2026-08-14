@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
-using Project_Quarry.Source.Data.Enums;
-using Project_Quarry.Source.Data.Interfaces;
-using Project_Quarry.Source.Temp;
+using Project_Template.Source.Data.Enums;
+using Project_Template.Source.Data.Interfaces;
+using Project_Template.Source.Temp;
 
-namespace Project_Quarry.Source.Actors {
+namespace Project_Template.Source.Actors {
     public abstract class ActorBehaviour : IActor {
         readonly Dictionary<Type, IComponent> components = [];
-        readonly List<IComponent> componentList = []; // quick access for looping
+        readonly List<IComponent> componentList = [];
 
         /// <summary>
         ///     Adds a component to the actor following the IComponent contract.
-        ///     When adding, the components initializer will be fired before added
+        ///     Component initializer will fire before being added.
         /// </summary>
-        /// <param name="component">The component to be added to actor</param>
+        /// <param name="component">The component to be added to the actor</param>
         /// <returns>The initiated component</returns>
         protected T AddComponent<T>(T component) where T : IComponent {
             component.Initialize(this);

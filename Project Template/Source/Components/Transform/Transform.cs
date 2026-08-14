@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace Project_Quarry.Source.Components.Transform {
+namespace Project_Template.Source.Components.Transform {
     public class Transform
         : ComponentBase {
         public Vector2 Position { get; set; } = Vector2.Zero;

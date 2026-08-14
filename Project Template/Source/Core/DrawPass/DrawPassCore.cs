@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
-using Project_Quarry.Source.Data.Enums;
-using Project_Quarry.Source.Data.Interfaces;
-using Project_Quarry.Source.Temp;
+using Project_Template.Source.Data.Enums;
+using Project_Template.Source.Data.Interfaces;
+using Project_Template.Source.Temp;
 
-namespace Project_Quarry.Source.Core.DrawPass {
+namespace Project_Template.Source.Core.DrawPass {
     public class DrawPassCore {
         readonly Dictionary<DrawPassId, List<IActor>> passes = [];
         readonly Dictionary<ushort, SpriteBatch> batchBuffer = [];
@@ -22,7 +22,8 @@ namespace Project_Quarry.Source.Core.DrawPass {
             passes.TryAdd(drawPass, []);
             foreach (var actor in actors) {
                 if (passes[drawPass].Contains(actor)) {
-                    continue;
+                    // TODO: Make loggerService for these errors
+                    throw new("Actor already exists.");
                 }
 
                 passes[drawPass].Add(actor);
@@ -32,13 +33,18 @@ namespace Project_Quarry.Source.Core.DrawPass {
 
         protected void UnregisterActors(DrawPassId drawPass, params IActor[] actors) {
             if (!passes.TryGetValue(drawPass, out var passActors)) {
-                return;
+                // TODO: Make loggerService for these errors
+                throw new("Actor doesn't exists.");
             }
 
             foreach (var actor in actors) {
                 if (passActors.Remove(actor)) {
                     actor.End();
                 }
+            }
+
+            if (passActors.Count == 0) {
+                passes.Remove(drawPass);
             }
         }
 

@@ -1,7 +1,7 @@
-using Project_Quarry.Source.Data.Enums;
-using Project_Quarry.Source.Data.Interfaces;
+using Project_Template.Source.Data.Enums;
+using Project_Template.Source.Data.Interfaces;
 
-namespace Project_Quarry.Source.Core.DrawPass {
+namespace Project_Template.Source.Core.DrawPass {
     public class DrawPass : DrawPassCore {
         /// <summary>
         ///     Draw every actor the screen following batches and drawPassIds.
@@ -38,7 +38,7 @@ namespace Project_Quarry.Source.Core.DrawPass {
 
         /// <summary>
         ///     Adds multiple actors to a selected drawPass.
-        ///     If the actor is already added, it will be skipped.
+        ///     If the actor is already added, an error message will be thrown.
         /// </summary>
         /// <remarks>
         ///     The function can either be called as:
@@ -52,7 +52,7 @@ namespace Project_Quarry.Source.Core.DrawPass {
 
         /// <summary>
         ///     Removes multiple actors from a drawPass.
-        ///     If an actor doesn't exist, it will be skipped.
+        ///     If an actor doesn't exist, and error message will be thrown.
         /// </summary>
         /// <remarks>
         ///     The function can either be called as:
