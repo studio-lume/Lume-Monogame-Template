@@ -1,6 +1,5 @@
-using System;
 using Microsoft.Extensions.DependencyInjection;
-using Project_Template.Source.Actors;
+using Project_Template.Source.Data.Interfaces;
 
 namespace Project_Template.Source.Core.DependencyInjector {
     public sealed class DependencyScope(ServiceCollection serviceCollection) {
@@ -14,12 +13,14 @@ namespace Project_Template.Source.Core.DependencyInjector {
             var instance = ActivatorUtilities.CreateInstance<T>(serviceProvider);
             // Really, really hacky fix,
             // But I have no other way of inserting the DrawPass into each actor,
-            if (instance is ActorBehaviour actor) {
-                actor.RegisterDrawPass(drawPass);
+            if (instance is IActorInternal actor) {
+                actor.CoreRegisterDrawPass(drawPass);
             }
 
             return instance;
         }
+
+        public T GetService<T>() where T : class => serviceProvider.GetRequiredService<T>();
 
         public void Dispose() {
             serviceProvider.Dispose();

@@ -17,7 +17,8 @@ namespace Project_Template.Source.Scenes {
                     throw new("Scope has already been defined");
                 }
             }
-        } 
+        }
+
         public DrawPass DrawPass {
             get => drawPass;
             set {
@@ -29,16 +30,25 @@ namespace Project_Template.Source.Scenes {
             }
         }
 
+        public void Initialize() {
+            DrawPass = ConfigureDrawPass();
+            Scope = RegisterDependencies();
+
+            Scope.SetDrawPass(DrawPass);
+        }
+
+
         public virtual DependencyScope RegisterDependencies() => new DependencyInjector().End();
 
-        public virtual DrawPass ConfigureDrawPass() => new DrawPass();
-        
+        public virtual DrawPass ConfigureDrawPass() => new();
+
         public virtual void Load() {
-            
         }
 
         public virtual void Unload() {
-            
+        }
+
+        public virtual void Update(GameTime time) {
         }
     }
 }

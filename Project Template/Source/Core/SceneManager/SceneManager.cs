@@ -8,20 +8,28 @@ namespace Project_Template.Source.Core.SceneManager {
 
         public void LoadScene<T>() where T : class, IScene, new() {
             var scene = new T();
-            var drawPass = scene.ConfigureDrawPass();
-            scene.DrawPass = drawPass;
-            
-            var scope = scene.RegisterDependencies();
-            scope.SetDrawPass(drawPass);
-            scene.Scope = scope;
-            
+
+            scene.Initialize();
             activeScenes.Add(scene);
             scene.Load();
         }
 
-        public void UpdateScenes(float deltaTime) {
+        public void UnloadScene<T>() where T : class, IScene {
+            for (var i = activeScenes.Count - 1; i >= 0; i--) {
+                if (activeScenes[i] is not T scene) {
+                    continue;
+                }
+
+                scene.Unload();
+                activeScenes.RemoveAt(i);
+                return;
+            }
+        }
+
+        public void UpdateScenes(GameTime time) {
             foreach (var scene in activeScenes) {
-                scene.DrawPass.Update(deltaTime);
+                scene.DrawPass.Update((float)time.ElapsedGameTime.TotalSeconds);
+                scene.Update(time);
             }
         }
 

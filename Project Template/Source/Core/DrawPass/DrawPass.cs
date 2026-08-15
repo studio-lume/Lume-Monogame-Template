@@ -1,29 +1,26 @@
+using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
 
 namespace Project_Template.Source.Core.DrawPass {
     public class DrawPass : DrawPassCore {
         /// <summary>
-        ///     Draw every actor the screen following batches and drawPassIds.
-        ///     each batch can be customized with the parameters of the Batch() function.
-        ///     <example>
-        ///         <code>
-        ///      using (var batch = Batch(1, samplerState: SamplerState.PointClamp)) {
-        ///          DrawPassToScreen(DrawPassId.Pass1, batch);
-        ///          DrawPassToScreen(DrawPassId.Pass2, batch);
-        ///       }
-        ///         </code>
-        ///     </example>
+        ///     Draws all the actors in the order defined when creating the pass
         /// </summary>
-        public void Draw() {
-            using (var batch = Batch(1)) {
-                DrawPassToScreen(DrawPassId.Test, batch);
-                DrawPassToScreen(DrawPassId.Test2, batch);
-            }
+        public void Draw() => DrawOrder();
 
-            using (var batch = Batch(2)) {
-                DrawPassToScreen(DrawPassId.Blocks, batch);
-            }
+        public DrawPass AddPass(DrawPassId drawPassId) {
+            RegisterPass(drawPassId);
+            return this;
+        }
+
+        public DrawPass NewBatch(
+            SpriteSortMode spriteSortMode = SpriteSortMode.Deferred,
+            BlendState blendState = null,
+            SamplerState samplerState = null
+        ) {
+            RegisterBatch();
+            return this;
         }
 
         /// <summary>

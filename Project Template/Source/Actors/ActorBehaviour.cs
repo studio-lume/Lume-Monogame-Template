@@ -6,7 +6,7 @@ using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
 
 namespace Project_Template.Source.Actors {
-    public abstract class ActorBehaviour : IActor {
+    public abstract class ActorBehaviour : IActor, IActorInternal {
         readonly Dictionary<Type, IComponent> components = [];
         readonly List<IComponent> componentList = [];
         readonly DrawPassId drawPassId;
@@ -62,22 +62,27 @@ namespace Project_Template.Source.Actors {
         /// <returns>Returns true if the component is attached to the actor, returns false if not</returns>
         protected bool HasComponent(Type componentType) => components.ContainsKey(componentType);
 
+        //-----------------------------------------------------------//
+        // Actor internal. Used for handling things going on behind the actor
+        // like handling the drawPass overhead and component updating.
+        //-----------------------------------------------------------//
+
         /// <summary>
         ///     Updates each component's update loop
         /// </summary>
         /// <param name="deltaTime">Time elapsed since last </param>
         /// frame
-        public void UpdateComponents(float deltaTime) {
+        void IActorInternal.CoreUpdateComponents(float deltaTime) {
             foreach (var component in componentList) {
                 component.Update(deltaTime);
             }
         }
 
         /// <summary>
-        /// Registers the actor to the selected drawPassId passed through the constructor
+        ///     Registers the actor to the selected drawPassId passed through the constructor.
         /// </summary>
-        /// <param name="drawPass">The drawpass Instance of the scene</param>
-        public void RegisterDrawPass(DrawPass drawPass) => drawPass.RegisterActors(drawPassId, this);
+        /// <param name="drawPass">The drawPass Instance of the scene</param>
+        void IActorInternal.CoreRegisterDrawPass(DrawPass drawPass) => drawPass.RegisterActors(drawPassId, this);
 
         /// <summary>
         ///     Creates an instance of an of actor and assigns it to a drawPass

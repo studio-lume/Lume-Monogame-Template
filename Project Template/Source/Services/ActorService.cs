@@ -1,19 +1,17 @@
-using System;
-using Microsoft.Extensions.DependencyInjection;
-using Project_Template.Source.Data.Interfaces;
 using Project_Template.Source.Core.DependencyInjector;
+using Project_Template.Source.Data.Interfaces;
 
 namespace Project_Template.Source.Services {
     /// <summary>
-    /// Provides actor management operations from within actors.
+    ///     Provides actor management operations from within actors.
     /// </summary>
     /// <remarks>
-    /// The <see cref="DependencyScope"/> is not directly accessible from actors.
-    /// This service provides access to actor management operations, such as
-    /// creating new actors through the current dependency scope.
+    ///     The <see cref="DependencyScope" /> is not directly accessible from actors.
+    ///     This service provides access to actor management operations, such as
+    ///     creating new actors through the current dependency scope.
     /// </remarks>
     /// <example>
-    /// <code>
+    ///     <code>
     /// public class ExampleActor(IActorService actorService)
     ///     : ActorBehaviour(DrawPassId.Example)
     /// {
@@ -24,9 +22,9 @@ namespace Project_Template.Source.Services {
     /// }
     /// </code>
     /// </example>
-    public class ActorService(IServiceProvider serviceProvider) : IActorService {
-        public T Create<T>() where T : class, IActor {
-            return ActivatorUtilities.CreateInstance<T>(serviceProvider);
-        }
+    public class ActorService : IActorService {
+        public DependencyScope Scope { private get; set; }
+
+        public T Create<T>() where T : class, IActor => Scope.Create<T>();
     }
 }

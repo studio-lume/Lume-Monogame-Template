@@ -1,20 +1,68 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
-        
+
 namespace Project_Template.Source.Core.DrawPass {
+    enum DrawPassOrderType {
+        DrawPass,
+        Batch
+    }
+
+    readonly struct DrawPassDefinition {
+        public SpriteSortMode SpriteSortMode { get; init; }
+        public BlendState BlendState { get; init; }
+        public SamplerState SamplerState { get; init; }
+        public DrawPassId DrawPassId { get; init; }
+        public DrawPassOrderType OrderType { get; init; }
+    }
+
     public class DrawPassCore {
         readonly Dictionary<DrawPassId, List<IActor>> passes = [];
-        readonly Dictionary<ushort, SpriteBatch> batchBuffer = [];
+        readonly List<DrawPassDefinition> drawPassOrder = [];
+        SpriteBatch spriteBatch;
 
         protected void Update(float deltaTime) {
             foreach (var pass in passes)
             foreach (var actor in pass.Value) {
-                actor.UpdateComponents(deltaTime);
+                ((IActorInternal)actor).CoreUpdateComponents(deltaTime);
                 actor.Update(deltaTime);
             }
+        }
+
+        protected void RegisterPass(DrawPassId drawPassId) => drawPassOrder.Add(new() {
+            DrawPassId = drawPassId,
+            OrderType = DrawPassOrderType.DrawPass
+        });
+
+        protected void RegisterBatch(
+            SpriteSortMode spriteSortMode = SpriteSortMode.Deferred,
+            BlendState blendState = null,
+            SamplerState samplerState = null
+        ) => drawPassOrder.Add(new() {
+            SamplerState = samplerState,
+            SpriteSortMode = spriteSortMode,
+            BlendState = blendState,
+            OrderType = DrawPassOrderType.Batch
+        });
+
+        protected void DrawOrder() {
+            spriteBatch ??= new(Global.GraphicsDevice);
+            var batchIsActive = false;
+            foreach (var definition in drawPassOrder) {
+                if (definition.OrderType == DrawPassOrderType.DrawPass) {
+                    DrawPassToScreen(definition.DrawPassId, spriteBatch);
+                } else {
+                    if (batchIsActive) {
+                        spriteBatch.End();
+                    }
+
+                    batchIsActive = true;
+                    spriteBatch.Begin(definition.SpriteSortMode, definition.BlendState, definition.SamplerState);
+                }
+            }
+
+            spriteBatch?.End();
         }
 
         protected void RegisterActors(DrawPassId drawPass, params IActor[] actors) {
@@ -67,46 +115,6 @@ namespace Project_Template.Source.Core.DrawPass {
 
             foreach (var actor in passActors) {
                 actor.Draw(spriteBatch);
-            }
-        }
-
-        SpriteBatch GetBatch(ushort batchId) {
-            if (batchBuffer.TryGetValue(batchId, out var batch)) {
-                return batch;
-            }
-
-            batch = new(Global.GraphicsDevice);
-            batchBuffer.Add(batchId, batch);
-
-            return batch;
-        }
-
-        protected BatchScope Batch(
-            ushort batchId,
-            SpriteSortMode spriteSortMode = SpriteSortMode.Deferred,
-            BlendState blendState = null,
-            SamplerState samplerState = null
-        ) {
-            var batch = GetBatch(batchId);
-            batch.Begin(
-                spriteSortMode,
-                blendState ?? BlendState.AlphaBlend,
-                samplerState ?? SamplerState.PointClamp
-            );
-
-            return new(batch);
-        }
-
-        protected sealed class BatchScope : IDisposable {
-            readonly SpriteBatch batch;
-
-            internal BatchScope(SpriteBatch batch) => this.batch = batch;
-
-            public static implicit operator SpriteBatch(BatchScope scope)
-                => scope.batch;
-
-            public void Dispose() {
-                batch.End();
             }
         }
     }

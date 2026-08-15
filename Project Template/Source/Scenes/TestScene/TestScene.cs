@@ -1,7 +1,7 @@
-using Microsoft.Xna.Framework;
 using Project_Template.Source.Actors.Test;
 using Project_Template.Source.Core.DependencyInjector;
 using Project_Template.Source.Core.DrawPass;
+using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
 using Project_Template.Source.Services;
 
@@ -11,7 +11,11 @@ namespace Project_Template.Source.Scenes.TestScene {
             .AddService<IActorService, ActorService>()
             .End();
 
-        public override DrawPass ConfigureDrawPass() => base.ConfigureDrawPass();
+        public override DrawPass ConfigureDrawPass() => new DrawPass()
+            .NewBatch()
+            .AddPass(DrawPassId.Test)
+            .AddPass(DrawPassId.Test2)
+            .AddPass(DrawPassId.Blocks);
 
         public override void Load() {
             for (var x = 0; x < 50; x++)
