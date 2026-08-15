@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using Project_Template.Source.Core.DrawPass;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
 
@@ -8,6 +9,7 @@ namespace Project_Template.Source.Actors {
     public abstract class ActorBehaviour : IActor {
         readonly Dictionary<Type, IComponent> components = [];
         readonly List<IComponent> componentList = [];
+        readonly DrawPassId drawPassId;
 
         /// <summary>
         ///     Adds a component to the actor following the IComponent contract.
@@ -72,10 +74,16 @@ namespace Project_Template.Source.Actors {
         }
 
         /// <summary>
+        /// Registers the actor to the selected drawPassId passed through the constructor
+        /// </summary>
+        /// <param name="drawPass">The drawpass Instance of the scene</param>
+        public void RegisterDrawPass(DrawPass drawPass) => drawPass.RegisterActors(drawPassId, this);
+
+        /// <summary>
         ///     Creates an instance of an of actor and assigns it to a drawPass
         /// </summary>
-        /// <param name="passId">The drawPass the actor will be assigned to</param>
-        protected ActorBehaviour(DrawPassId passId) => Global.DrawPass.RegisterActors(passId, this);
+        /// <param name="drawPassId">The drawPass the actor will be assigned to</param>
+        protected ActorBehaviour(DrawPassId drawPassId) => this.drawPassId = drawPassId;
 
         //-----------------------------------------------------------//
         // Filler functions for filling in actors
