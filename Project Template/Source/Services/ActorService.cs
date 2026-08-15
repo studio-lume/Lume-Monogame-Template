@@ -25,8 +25,18 @@ namespace Project_Template.Source.Services {
     /// </code>
     /// </example>
     public class ActorService(IServiceProvider serviceProvider) : IActorService {
-        public T Create<T>() where T : class, IActor {
-            return ActivatorUtilities.CreateInstance<T>(serviceProvider);
-        }
+        /// <summary>
+        /// Creates a new actor using the current dependency injection container.
+        /// Constructor dependencies are resolved automatically.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// var actor = actorService.Create&lt;ExampleActor&gt;();
+        /// </code>
+        /// </example>
+        /// <typeparam name="T">The type of actor to create.</typeparam>
+        /// <returns>A new instance of the specified actor with its dependencies injected.</returns>
+        public T Create<T>() where T : class, IActor =>
+            ActivatorUtilities.CreateInstance<T>(serviceProvider);
     }
 }
