@@ -1,5 +1,7 @@
-using Project_Template.Source.Core.DependencyInjector;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 using Project_Template.Source.Data.Interfaces;
+using Project_Template.Source.Core.DependencyInjector;
 
 namespace Project_Template.Source.Services {
     /// <summary>
@@ -22,9 +24,9 @@ namespace Project_Template.Source.Services {
     /// }
     /// </code>
     /// </example>
-    public class ActorService : IActorService {
-        public DependencyScope DependencyScope { private get; set; }
-        
-        public T Create<T>() where T : class, IActor => DependencyScope.Create<T>();
+    public class ActorService(IServiceProvider serviceProvider) : IActorService {
+        public T Create<T>() where T : class, IActor {
+            return ActivatorUtilities.CreateInstance<T>(serviceProvider);
+        }
     }
 }

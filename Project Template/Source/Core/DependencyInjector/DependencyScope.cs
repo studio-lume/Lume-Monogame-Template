@@ -6,13 +6,8 @@ namespace Project_Template.Source.Core.DependencyInjector {
         readonly ServiceProvider serviceProvider =
             serviceCollection.BuildServiceProvider();
 
-        public T Create<T>() where T : class
-        {
-            return ActivatorUtilities.CreateInstance<T>(serviceProvider);
-        }
-
-        public T GetRequiredService<T>() => serviceProvider.GetRequiredService<T>();
-            
+        public T Create<T>() where T : class => ActivatorUtilities.CreateInstance<T>(serviceProvider);
+        
         public void Dispose() {
             serviceProvider.Dispose();
         }

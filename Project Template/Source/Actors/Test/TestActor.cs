@@ -13,6 +13,8 @@ namespace Project_Template.Source.Actors.Test {
         public override void Start() {
             Transform = AddComponent(new Transform());
             Sprite = AddComponent(new Sprite("sample_texture"));
+
+            service.Create<BActor>();
         }
 
         public override void Update(float deltaTime) {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
-
+        
 namespace Project_Template.Source.Core.DrawPass {
     public class DrawPassCore {
         readonly Dictionary<DrawPassId, List<IActor>> passes = [];
