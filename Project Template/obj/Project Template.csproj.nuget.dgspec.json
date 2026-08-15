@@ -48,6 +48,10 @@
           "framework": "net9.0",
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[9.0.18, )"
+            },
             "MonoGame.Content.Builder.Task": {
               "target": "Package",
               "version": "[3.8.*, )"

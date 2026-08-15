@@ -2,34 +2,37 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Project_Template.Source.Actors.Test;
-using Project_Template.Source.Temp;
+using Project_Template.Source.Core.DependencyInjector;
+using Project_Template.Source.Data.Interfaces;
+using Project_Template.Source.Services;
 
 namespace Project_Template {
     public class Game : Microsoft.Xna.Framework.Game {
-        readonly GraphicsDeviceManager graphics;
-
         public Game() {
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             IsFixedTimeStep = false;
 
-            graphics = new(this) {
+            Global.ContentManager = Content;
+            Global.GraphicsDeviceManager = new(this) {
                 SynchronizeWithVerticalRetrace = false,
                 // IsFullScreen = true,
                 PreferredBackBufferWidth = 1920,
                 PreferredBackBufferHeight = 1080
             };
-
-            ContentService.Service = Content;
-            PassService.Service = new();
+            Global.DrawPass = new();
         }
 
         protected override void Initialize() {
-            DeviceService.Service = GraphicsDevice;
+            Global.GraphicsDevice = GraphicsDevice;
 
-            for (var x = 0; x < 100; x++)
-            for (var y = 0; y < 100; y++) {
-                new TestActor().Transform.Position = new(x * 100, y * 100);
+            var scope = new DependencyInjector()
+                .AddService<IActorService, ActorService>()
+                .End();
+            
+            for (var x = 0; x < 50; x++)
+            for (var y = 0; y < 50; y++) {
+                scope.Create<TestActor>().Transform.Position = new(x * 100, y * 100);
             }
 
             base.Initialize();
@@ -41,7 +44,7 @@ namespace Project_Template {
                 Exit();
             }
 
-            PassService.Service.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            Global.DrawPass.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             Console.WriteLine($"FPS: {1 / gameTime.ElapsedGameTime.TotalSeconds}");
 
             base.Update(gameTime);
@@ -50,7 +53,7 @@ namespace Project_Template {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.White);
 
-            PassService.Service.Draw();
+            Global.DrawPass.Draw();
 
             base.Draw(gameTime);
         }

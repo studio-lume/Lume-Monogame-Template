@@ -3,9 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Components.Sprite;
 using Project_Template.Source.Components.Transform;
 using Project_Template.Source.Data.Enums;
+using Project_Template.Source.Data.Interfaces;
 
 namespace Project_Template.Source.Actors.Test {
-    public class TestActor() : ActorBehaviour(DrawPassId.Test) {
+    public class TestActor(IActorService service) : ActorBehaviour(DrawPassId.Test) {
         public Transform Transform;
         public Sprite Sprite;
 

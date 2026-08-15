@@ -73,3 +73,5 @@ C:\Users\hugod\Documents\Projects\Lume-Monogame-Template\Project Template\bin\De
 C:\Users\hugod\Documents\Projects\Lume-Monogame-Template\Project Template\obj\Debug\net9.0\Project .C593593C.Up2Date
 C:\Users\hugod\Documents\Projects\Lume-Monogame-Template\Project Template\obj\Debug\net9.0\Project Template.genruntimeconfig.cache
 C:\Users\hugod\Documents\Projects\Lume-Monogame-Template\Project Template\obj\Debug\net9.0\ref\Project Template.dll
+C:\Users\hugod\Documents\Projects\Lume-Monogame-Template\Project Template\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\hugod\Documents\Projects\Lume-Monogame-Template\Project Template\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll

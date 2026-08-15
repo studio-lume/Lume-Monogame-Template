@@ -1,18 +1,19 @@
 using Microsoft.Xna.Framework;
+using Project_Template.Source.Core;
 
 namespace Project_Template.Source.Components.Transform {
     public class Transform
         : ComponentBase {
-        public Vector2 Position { get; set; } = Vector2.Zero;
-        public Vector2 Size { get; set; } = new(100, 100);
+        public Vector2I Position { get; set; } = Vector2I.Zero;
+        public Vector2I Size { get; set; } = new(100, 100);
         public float Rotation { get; set; }
 
         public Rectangle Bounds =>
             new(
-                (int)Position.X,
-                (int)Position.Y,
-                (int)Size.X,
-                (int)Size.Y
+                Position.X,
+                Position.Y,
+                Size.X,
+                Size.Y
             );
     }
 }
