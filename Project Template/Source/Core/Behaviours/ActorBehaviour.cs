@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
+using IComponent = Project_Template.Source.Data.Interfaces.IComponent;
 
 namespace Project_Template.Source.Core.Behaviours {
     public abstract class ActorBehaviour : IActor, IActorInternal {
@@ -17,8 +18,12 @@ namespace Project_Template.Source.Core.Behaviours {
         /// <param name="component">The component to be added to the actor</param>
         /// ///
         /// <typeparam name="T">T follows contract IComponent</typeparam>
-        /// <returns>The initiated component</returns
+        /// <returns>The initiated component</returns>
         public T AddComponent<T>(T component) where T : IComponent {
+            if (components.ContainsKey(typeof(T))) {
+                throw new($"Component of type {typeof(T)} is already present");
+            }
+
             component.Initialize(this);
             components.TryAdd(typeof(T), component);
             componentList.Add(component);
@@ -53,6 +58,7 @@ namespace Project_Template.Source.Core.Behaviours {
         public void RemoveComponent<T>() where T : IComponent {
             if (components.Remove(typeof(T), out var component)) {
                 componentList.Remove(component);
+                component.End();
             }
         }
 
@@ -85,6 +91,15 @@ namespace Project_Template.Source.Core.Behaviours {
         /// <param name="drawPass">The drawPass Instance of the scene</param>
         void IActorInternal.CoreRegisterDrawPass(DrawPass drawPass) =>
             drawPass.RegisterActors(drawPassId, this);
+
+        /// <summary>
+        ///     Ends all the components inside the actor
+        /// </summary>
+        void IActorInternal.CoreEndComponents() {
+            foreach (var component in componentList) {
+                component.End();
+            }
+        }
 
         /// <summary>
         ///     Creates an instance of an of actor and assigns it to a drawPass

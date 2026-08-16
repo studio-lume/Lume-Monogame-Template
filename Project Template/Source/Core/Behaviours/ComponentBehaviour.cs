@@ -7,5 +7,8 @@ namespace Project_Template.Source.Core.Behaviours {
 
         public virtual void Update(float deltaTime) {
         }
+
+        public virtual void End() {
+        }
     }
 }
