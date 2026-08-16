@@ -17,6 +17,7 @@ namespace Project_Template.Source.Actors.Test {
 
         public override void Update(float deltaTime) {
             Transform.Rotation += 0.01f;
+            Transform.TranslateLocal(new(0, 2));
         }
 
         public override void Draw(SpriteBatch spriteBatch) {

@@ -29,11 +29,8 @@ namespace Project_Template {
             var scope = new DependencyInjector()
                 .AddService<IActorService, ActorService>()
                 .End();
-            
-            for (var x = 0; x < 50; x++)
-            for (var y = 0; y < 50; y++) {
-                scope.Create<TestActor>().Transform.Position = new(x * 100, y * 100);
-            }
+
+            scope.Create<TestActor>().Transform.Position = new(500, 500);
 
             base.Initialize();
         }
