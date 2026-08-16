@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
-using Project_Template.Source.Core.DrawPass;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
 
-namespace Project_Template.Source.Actors {
+namespace Project_Template.Source.Core.Behaviours {
     public abstract class ActorBehaviour : IActor, IActorInternal {
         readonly Dictionary<Type, IComponent> components = [];
         readonly List<IComponent> componentList = [];
@@ -82,7 +81,8 @@ namespace Project_Template.Source.Actors {
         ///     Registers the actor to the selected drawPassId passed through the constructor.
         /// </summary>
         /// <param name="drawPass">The drawPass Instance of the scene</param>
-        void IActorInternal.CoreRegisterDrawPass(DrawPass drawPass) => drawPass.RegisterActors(drawPassId, this);
+        void IActorInternal.CoreRegisterDrawPass(DrawPass drawPass) =>
+            drawPass.RegisterActors(drawPassId, this);
 
         /// <summary>
         ///     Creates an instance of an of actor and assigns it to a drawPass

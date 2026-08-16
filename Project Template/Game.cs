@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Project_Template.Source.Scenes.TestScene;
+using Project_Template.Source.Scenes;
 
 namespace Project_Template {
     public class Game : Microsoft.Xna.Framework.Game {
@@ -14,7 +14,7 @@ namespace Project_Template {
             Global.ContentManager = Content;
             Global.GraphicsDeviceManager = new(this) {
                 SynchronizeWithVerticalRetrace = false,
-                // IsFullScreen = true,
+                IsFullScreen = true,
                 PreferredBackBufferWidth = 1920,
                 PreferredBackBufferHeight = 1080
             };

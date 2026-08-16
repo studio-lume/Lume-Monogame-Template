@@ -1,4 +1,3 @@
-using Project_Template.Source.Core.DependencyInjector;
 using Project_Template.Source.Data.Interfaces;
 
 namespace Project_Template.Source.Services {
@@ -6,9 +5,9 @@ namespace Project_Template.Source.Services {
     ///     Provides actor management operations from within actors.
     /// </summary>
     /// <remarks>
-    ///     The <see cref="DependencyScope" /> is not directly accessible from actors.
+    ///     The <see cref="ScenePipeline" /> is not directly accessible from actors.
     ///     This service provides access to actor management operations, such as
-    ///     creating new actors through the current dependency scope.
+    ///     creating new actors through the current Scene Pipeline.
     /// </remarks>
     /// <example>
     ///     <code>
@@ -23,8 +22,8 @@ namespace Project_Template.Source.Services {
     /// </code>
     /// </example>
     public class ActorService : IActorService {
-        public DependencyScope Scope { private get; set; }
+        public IScenePipeline ScenePipeline { private get; set; }
 
-        public T Create<T>() where T : class, IActor => Scope.Create<T>();
+        public T Create<T>() where T : class => ScenePipeline.Create<T>();
     }
 }

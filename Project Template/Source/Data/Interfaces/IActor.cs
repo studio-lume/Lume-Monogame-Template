@@ -1,5 +1,5 @@
 using Microsoft.Xna.Framework.Graphics;
-using Project_Template.Source.Core.DrawPass;
+using Project_Template.Source.Core;
 
 namespace Project_Template.Source.Data.Interfaces {
     public interface IActorInternal {
