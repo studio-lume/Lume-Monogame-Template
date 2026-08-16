@@ -15,10 +15,12 @@ namespace Project_Template.Source.Core.Behaviours {
         ///     Component initializer will fire before being added.
         /// </summary>
         /// <param name="component">The component to be added to the actor</param>
-        /// <returns>The initiated component</returns>
-        protected T AddComponent<T>(T component) where T : IComponent {
+        /// ///
+        /// <typeparam name="T">T follows contract IComponent</typeparam>
+        /// <returns>The initiated component</returns
+        public T AddComponent<T>(T component) where T : IComponent {
             component.Initialize(this);
-            components.TryAdd(component.GetType(), component);
+            components.TryAdd(typeof(T), component);
             componentList.Add(component);
             return component;
         }
@@ -27,13 +29,12 @@ namespace Project_Template.Source.Core.Behaviours {
         ///     Tries to fetch a component by its type. If it succeeds, it returns the component.
         ///     If not, the return type is false, flagging the operation as failed.
         /// </summary>
-        /// <param name="componentType">The type of the component which should be fetched</param>
         /// <param name="component">The component from fetched from the list</param>
         /// <typeparam name="T">T follows contract IComponent</typeparam>
         /// <returns>If true, the operation is successful, if not, then it indicates the operation has failed</returns>
-        protected bool TryGetComponent<T>(Type componentType, out T component) where T : IComponent {
+        public bool TryGetComponent<T>(out T component) where T : IComponent {
             component = default;
-            if (!components.TryGetValue(componentType, out var actorComponent)) {
+            if (!components.TryGetValue(typeof(T), out var actorComponent)) {
                 return false;
             }
 
@@ -46,12 +47,13 @@ namespace Project_Template.Source.Core.Behaviours {
         }
 
         /// <summary>
-        ///     Removes a component from the actor.
+        ///     Removes a component from the actor
         /// </summary>
-        /// <param name="component">The component which should be removed</param>
-        protected void RemoveComponent<T>(T component) where T : IComponent {
-            components.Remove(component.GetType());
-            componentList.Remove(component);
+        /// <typeparam name="T">The type of Component</typeparam>
+        public void RemoveComponent<T>() where T : IComponent {
+            if (components.Remove(typeof(T), out var component)) {
+                componentList.Remove(component);
+            }
         }
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace Project_Template.Source.Core.Behaviours {
         /// </summary>
         /// <param name="componentType">The type of component which should be checked</param>
         /// <returns>Returns true if the component is attached to the actor, returns false if not</returns>
-        protected bool HasComponent(Type componentType) => components.ContainsKey(componentType);
+        public bool HasComponent(Type componentType) => components.ContainsKey(componentType);
 
         //-----------------------------------------------------------//
         // Actor internal. Used for handling things going on behind the actor
