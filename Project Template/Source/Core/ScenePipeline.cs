@@ -44,6 +44,26 @@ namespace Project_Template.Source.Core {
             return instance;
         }
 
+        /// <summary>
+        ///     Attempts to retrieve a registered service of the specified type.
+        /// </summary>
+        /// <typeparam name="T">
+        ///     The type of service to retrieve.
+        /// </typeparam>
+        /// <param name="service">
+        ///     When this method returns, contains the registered service if found;
+        ///     otherwise, the default value of <typeparamref name="T" />.
+        /// </param>
+        /// <returns>
+        ///     <see langword="true" /> if a service of the specified type is registered;
+        ///     otherwise, <see langword="false" />.
+        /// </returns>
+        public bool TryGetService<T>(out T service) where T : class {
+            var state = dependencyScope.TryGetService<T>(out var scopeService);
+            service = scopeService;
+            return state;
+        }
+
         void IScenePipelineInternal.ClearDrawPasses() => drawPass.ClearPasses();
 
         void IScenePipelineInternal.Update(float deltaTime) => drawPass.Update(deltaTime);
