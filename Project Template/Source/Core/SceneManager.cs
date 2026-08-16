@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Project_Template.Source.Data.Interfaces;
 
 namespace Project_Template.Source.Core {
     public class SceneManager {
+        readonly List<Type> activeSceneTypes = [];
         readonly List<IScene> activeScenes = [];
 
         /// <summary>
@@ -15,10 +17,15 @@ namespace Project_Template.Source.Core {
         /// </remarks>
         /// <typeparam name="T">The type of scene to create.</typeparam>
         public void LoadScene<T>() where T : class, IScene, new() {
+            if (activeSceneTypes.Contains(typeof(T))) {
+                throw new($"Scene of type {typeof(T)} is already registered");
+            }
+
             var scene = new T();
 
             scene.Initialize();
             activeScenes.Add(scene);
+            activeSceneTypes.Add(typeof(T));
             scene.Load();
         }
 
@@ -41,6 +48,7 @@ namespace Project_Template.Source.Core {
                 scene.Unload();
                 ((IScenePipelineInternal)scene.Scene).ClearDrawPasses();
                 activeScenes.RemoveAt(i);
+                activeSceneTypes.Remove(typeof(T));
                 return;
             }
         }
