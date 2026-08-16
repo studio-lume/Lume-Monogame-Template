@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
-using Project_Template.Source.Temp;
 
 namespace Project_Template.Source.Actors {
     public abstract class ActorBehaviour : IActor {
@@ -76,7 +75,7 @@ namespace Project_Template.Source.Actors {
         ///     Creates an instance of an of actor and assigns it to a drawPass
         /// </summary>
         /// <param name="passId">The drawPass the actor will be assigned to</param>
-        protected ActorBehaviour(DrawPassId passId) => PassService.Service.RegisterActors(passId, this);
+        protected ActorBehaviour(DrawPassId passId) => Global.DrawPass.RegisterActors(passId, this);
 
         //-----------------------------------------------------------//
         // Filler functions for filling in actors

@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Actors;
-using Project_Template.Source.Temp;
 
 namespace Project_Template.Source.Components.Sprite {
     public class Sprite(string textureName) :
@@ -9,7 +8,7 @@ namespace Project_Template.Source.Components.Sprite {
         Texture2D texture;
 
         public override void Initialize(ActorBehaviour actor) {
-            texture = ContentService.Service.Load<Texture2D>(textureName);
+            texture = Global.ContentManager.Load<Texture2D>(textureName);
         }
 
         /// <summary>

@@ -8,10 +8,30 @@
     ".NETCoreApp,Version=v9.0": {
       "Project Template/1.0.0": {
         "dependencies": {
+          "Microsoft.Extensions.DependencyInjection": "9.0.18",
           "MonoGame.Framework.DesktopGL": "3.8.5"
         },
         "runtime": {
           "Project Template.dll": {}
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection/9.0.18": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.18"
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.DependencyInjection.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1826.31522"
+          }
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.18": {
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1826.31522"
+          }
         }
       },
       "MonoGame.Framework.DesktopGL/3.8.5": {
@@ -135,6 +155,20 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Microsoft.Extensions.DependencyInjection/9.0.18": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xPoYhpBypsweLpZ29GPp6Kv6g1fZMUwJ800D/xO7ASuNn5zx0BNIP600wXXhbPNeO8kKngFRtoWplRffxBUDgw==",
+      "path": "microsoft.extensions.dependencyinjection/9.0.18",
+      "hashPath": "microsoft.extensions.dependencyinjection.9.0.18.nupkg.sha512"
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.18": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eSUdaLUP+pj1J7SpCsUYQP6dNk0w9g0KGu4ovPYBnlfqomW1u+1fF8ZIjMVuHY6Z3p30yL0SxND9JTS6i3NolQ==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/9.0.18",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.9.0.18.nupkg.sha512"
     },
     "MonoGame.Framework.DesktopGL/3.8.5": {
       "type": "package",

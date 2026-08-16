@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
-using Project_Template.Source.Temp;
-
+        
 namespace Project_Template.Source.Core.DrawPass {
     public class DrawPassCore {
         readonly Dictionary<DrawPassId, List<IActor>> passes = [];
@@ -76,7 +75,7 @@ namespace Project_Template.Source.Core.DrawPass {
                 return batch;
             }
 
-            batch = new(DeviceService.Service);
+            batch = new(Global.GraphicsDevice);
             batchBuffer.Add(batchId, batch);
 
             return batch;
