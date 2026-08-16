@@ -58,11 +58,8 @@ namespace Project_Template.Source.Core {
         ///     <see langword="true" /> if a service of the specified type is registered;
         ///     otherwise, <see langword="false" />.
         /// </returns>
-        public bool TryGetService<T>(out T service) where T : class {
-            var state = dependencyScope.TryGetService<T>(out var scopeService);
-            service = scopeService;
-            return state;
-        }
+        public bool TryGetService<T>(out T service) where T : class =>
+            dependencyScope.TryGetService<T>(out service);
 
         void IScenePipelineInternal.ClearDrawPasses() => drawPass.ClearPasses();
 

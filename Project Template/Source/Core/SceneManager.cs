@@ -38,8 +38,8 @@ namespace Project_Template.Source.Core {
                     continue;
                 }
 
-                ((IScenePipelineInternal)scene.Scene).ClearDrawPasses();
                 scene.Unload();
+                ((IScenePipelineInternal)scene.Scene).ClearDrawPasses();
                 activeScenes.RemoveAt(i);
                 return;
             }

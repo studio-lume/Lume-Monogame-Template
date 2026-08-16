@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Project_Template.Source.Scenes;
 
@@ -15,8 +16,8 @@ namespace Project_Template {
             Global.GraphicsDeviceManager = new(this) {
                 SynchronizeWithVerticalRetrace = false,
                 IsFullScreen = true,
-                PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080
+                PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width,
+                PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height
             };
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Data.Enums;
@@ -30,6 +31,15 @@ namespace Project_Template.Source.Core {
         /// <param name="drawPassId">The identifier of the actor pass to register.</param>
         /// <returns>The current <see cref="DrawPass" /> instance for method chaining.</returns>
         public DrawPass AddPass(DrawPassId drawPassId) {
+            foreach (var definition in definitions) {
+                if (definition.Type == DrawPassOrderType.DrawPass &&
+                    definition.DrawPassId == drawPassId) {
+                    throw new InvalidOperationException(
+                        $"Draw pass '{drawPassId}' has already been defined."
+                    );
+                }
+            }
+
             definitions.Add(new() {
                 Type = DrawPassOrderType.DrawPass,
                 DrawPassId = drawPassId,
@@ -77,10 +87,19 @@ namespace Project_Template.Source.Core {
         /// </remarks>
         /// <param name="deltaTime">The time elapsed since last frame</param>
         public void Update(float deltaTime) {
-            foreach (var pass in passes)
-            foreach (var actor in pass.Value) {
-                ((IActorInternal)actor).CoreUpdateComponents(deltaTime);
-                actor.Update(deltaTime);
+            foreach (var definition in definitions) {
+                if (definition.Type != DrawPassOrderType.DrawPass) {
+                    continue;
+                }
+
+                if (!passes.TryGetValue(definition.DrawPassId, out var actors)) {
+                    continue;
+                }
+
+                foreach (var actor in actors) {
+                    ((IActorInternal)actor).CoreUpdateComponents(deltaTime);
+                    actor.Update(deltaTime);
+                }
             }
         }
 
@@ -96,7 +115,7 @@ namespace Project_Template.Source.Core {
         /// </remarks>
         /// <param name="drawPass">The drawPassId where the new actors will be assigned to</param>
         /// <param name="actors">The list of actors which will be added to the drawPass</param>
-        public new void RegisterActors(DrawPassId drawPass, params IActor[] actors) {
+        public void RegisterActors(DrawPassId drawPass, params IActor[] actors) {
             passes.TryAdd(drawPass, []);
             foreach (var actor in actors) {
                 if (passes[drawPass].Contains(actor)) {
@@ -121,10 +140,10 @@ namespace Project_Template.Source.Core {
         /// </remarks>
         /// <param name="drawPassId">The id of the drawPass where the actors are located</param>
         /// <param name="actors">The list of actors which should be removed from the drawPass</param>
-        public new void UnregisterActors(DrawPassId drawPassId, params IActor[] actors) {
+        public void UnregisterActors(DrawPassId drawPassId, params IActor[] actors) {
             if (!passes.TryGetValue(drawPassId, out var passActors)) {
                 // TODO: Make loggerService for these errors
-                throw new("Actor doesn't exists.");
+                throw new("Actor doesn't exist.");
             }
 
             foreach (var actor in actors) {

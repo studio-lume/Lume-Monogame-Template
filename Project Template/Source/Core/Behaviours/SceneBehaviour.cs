@@ -4,7 +4,7 @@ using Project_Template.Source.Data.Interfaces;
 
 namespace Project_Template.Source.Core.Behaviours {
     public abstract class SceneBehaviour : IScene {
-        public ScenePipeline Scene { get; set; }
+        public ScenePipeline Scene { get; private set; }
         DrawPass drawPass;
         DependencyScope scope;
 
