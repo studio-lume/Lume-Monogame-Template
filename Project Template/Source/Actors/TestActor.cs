@@ -1,11 +1,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Project_Template.Source.Components.Sprite;
-using Project_Template.Source.Components.Transform;
+using Project_Template.Source.Components;
+using Project_Template.Source.Core.Behaviours;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
 
-namespace Project_Template.Source.Actors.Test {
+namespace Project_Template.Source.Actors {
     public class TestActor(IActorService service) : ActorBehaviour(DrawPassId.Test) {
         public Transform Transform;
         public Sprite Sprite;
@@ -27,7 +27,7 @@ namespace Project_Template.Source.Actors.Test {
                 null,
                 Color.White,
                 Transform.Rotation,
-                Sprite.GetOrigin(0f, 0f),
+                Sprite.GetOrigin(0.5f, 0.5f),
                 SpriteEffects.None,
                 0f
             );

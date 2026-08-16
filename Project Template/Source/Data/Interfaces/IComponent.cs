@@ -1,4 +1,4 @@
-using Project_Template.Source.Actors;
+using Project_Template.Source.Core.Behaviours;
 
 namespace Project_Template.Source.Data.Interfaces {
     public interface IComponent {
