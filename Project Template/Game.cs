@@ -1,10 +1,8 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Project_Template.Source.Actors.Test;
-using Project_Template.Source.Core.DependencyInjector;
-using Project_Template.Source.Data.Interfaces;
-using Project_Template.Source.Services;
+using Project_Template.Source.Scenes;
 
 namespace Project_Template {
     public class Game : Microsoft.Xna.Framework.Game {
@@ -13,27 +11,21 @@ namespace Project_Template {
             IsMouseVisible = true;
             IsFixedTimeStep = false;
 
+            Global.SceneManager = new();
             Global.ContentManager = Content;
             Global.GraphicsDeviceManager = new(this) {
                 SynchronizeWithVerticalRetrace = false,
-                // IsFullScreen = true,
-                PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080
+                IsFullScreen = true,
+                PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width,
+                PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height
             };
-            Global.DrawPass = new();
         }
 
         protected override void Initialize() {
             Global.GraphicsDevice = GraphicsDevice;
 
-            var scope = new DependencyInjector()
-                .AddService<IActorService, ActorService>()
-                .End();
-            
-            for (var x = 0; x < 50; x++)
-            for (var y = 0; y < 50; y++) {
-                scope.Create<TestActor>().Transform.Position = new(x * 100, y * 100);
-            }
+            // starter scene
+            Global.SceneManager.LoadScene<TestScene>();
 
             base.Initialize();
         }
@@ -44,8 +36,8 @@ namespace Project_Template {
                 Exit();
             }
 
-            Global.DrawPass.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            Console.WriteLine($"FPS: {1 / gameTime.ElapsedGameTime.TotalSeconds}");
+            Global.SceneManager.UpdateScenes(gameTime);
+            Console.WriteLine($"Fps: {1 / (float)gameTime.ElapsedGameTime.TotalSeconds}");
 
             base.Update(gameTime);
         }
@@ -53,7 +45,7 @@ namespace Project_Template {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.White);
 
-            Global.DrawPass.Draw();
+            Global.SceneManager.DrawScenes();
 
             base.Draw(gameTime);
         }

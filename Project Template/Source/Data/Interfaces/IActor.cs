@@ -1,9 +1,13 @@
 using Microsoft.Xna.Framework.Graphics;
+using Project_Template.Source.Core;
 
 namespace Project_Template.Source.Data.Interfaces {
-    public interface IActor {
-        public void UpdateComponents(float deltaTime);
+    public interface IActorInternal {
+        public void CoreUpdateComponents(float deltaTime);
+        public void CoreRegisterDrawPass(DrawPass drawPass);
+    }
 
+    public interface IActor {
         public void Start() {
         }
 
