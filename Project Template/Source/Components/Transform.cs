@@ -28,14 +28,13 @@ namespace Project_Template.Source.Components {
 
         public void TranslateLocal(Vector2I movement, float? rotationOverwrite = null) {
             var rotation = rotationOverwrite ?? Rotation;
-
             var cos = MathF.Cos(rotation);
             var sin = MathF.Sin(rotation);
 
-            var x = (int)MathF.Round(movement.X * cos - movement.Y * sin);
-            var y = (int)MathF.Round(movement.X * sin + movement.Y * cos);
-
-            Translate(new(x, y));
+            Translate(new(
+                movement.X * cos - movement.Y * sin,
+                movement.X * sin + movement.Y * cos
+            ));
         }
     }
 }
