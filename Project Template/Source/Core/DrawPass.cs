@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Components;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
+using Project_Template.Source.Data.Interfaces._Project.Scripts.Data.Interfaces;
+using Project_Template.Source.Services.LoggerService;
 
 namespace Project_Template.Source.Core {
     enum DrawPassOrderType {
@@ -21,6 +23,7 @@ namespace Project_Template.Source.Core {
     );
 
     public class DrawPass {
+        static readonly LoggerService LoggerService = new LoggerService();
         readonly Dictionary<DrawPassId, List<IActor>> passes = [];
         readonly List<DrawPassDefinition> definitions = [];
         SpriteBatch spriteBatch;
@@ -36,9 +39,13 @@ namespace Project_Template.Source.Core {
             foreach (var definition in definitions) {
                 if (definition.Type == DrawPassOrderType.DrawPass &&
                     definition.DrawPassId == drawPassId) {
-                    throw new InvalidOperationException(
-                        $"Draw pass '{drawPassId}' has already been defined."
-                    );
+                    LoggerService.Log(
+                        LogLevel.Error,
+                        LogCategory.Core,
+                        "Draw pass has already been defined",
+                        new LoggerContext()
+                            .AddSection("Draw Pass Information")
+                            .Add("Draw pass ID", drawPassId));
                 }
             }
 
@@ -121,8 +128,15 @@ namespace Project_Template.Source.Core {
             passes.TryAdd(drawPass, []);
             foreach (var actor in actors) {
                 if (passes[drawPass].Contains(actor)) {
-                    // TODO: Make loggerService for these errors
-                    throw new("Actor already exists.");
+                    LoggerService.Log(
+                        LogLevel.Error,
+                        LogCategory.Core,
+                        "Actor already exists",
+                        new LoggerContext()
+                            .AddSection("Actor Information")
+                            .Add("Actor Type", actor.GetType().Name)
+                            .AddSection("Draw Pass Information")
+                            .Add("Draw Pass ID", drawPass));
                 }
 
                 passes[drawPass].Add(actor);
@@ -144,8 +158,14 @@ namespace Project_Template.Source.Core {
         /// <param name="actors">The list of actors which should be removed from the drawPass</param>
         public void UnregisterActors(DrawPassId drawPassId, params IActor[] actors) {
             if (!passes.TryGetValue(drawPassId, out var passActors)) {
-                // TODO: Make loggerService for these errors
-                throw new("Actor doesn't exist.");
+                LoggerService.Log(
+                    LogLevel.Error,
+                    LogCategory.Core,
+                    "Actor doesn't exists",
+                    new LoggerContext()
+                        .AddSection("Draw Pass Information")
+                        .Add("Draw Pass ID", drawPassId));
+                throw new(); // to shut up rider
             }
 
             foreach (var actor in actors) {

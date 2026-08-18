@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
+using Project_Template.Source.Services.LoggerService;
 
 namespace Project_Template.Source.Core {
     public class SceneManager {
@@ -19,7 +21,13 @@ namespace Project_Template.Source.Core {
         /// <typeparam name="T">The type of scene to create.</typeparam>
         public void LoadScene<T>() where T : class, IScene, new() {
             if (activeSceneTypes.Contains(typeof(T))) {
-                throw new($"Scene of type {typeof(T)} is already registered");
+                new LoggerService().Log(
+                    LogLevel.Error,
+                    LogCategory.Scene,
+                    "Scene has already been registered",
+                    new LoggerContext()
+                        .AddSection("Scene Information")
+                        .Add("Scene Name", typeof(T).Name));
             }
 
             var scene = new T();

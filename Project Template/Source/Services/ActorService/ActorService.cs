@@ -1,6 +1,6 @@
 using Project_Template.Source.Data.Interfaces;
 
-namespace Project_Template.Source.Services {
+namespace Project_Template.Source.Services.ActorService {
     /// <summary>
     ///     Provides actor management operations from within actors.
     /// </summary>
