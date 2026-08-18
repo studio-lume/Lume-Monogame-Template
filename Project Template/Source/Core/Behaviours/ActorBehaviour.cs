@@ -10,13 +10,12 @@ namespace Project_Template.Source.Core.Behaviours {
         readonly Dictionary<Type, IComponent> components = [];
         readonly List<IComponent> componentList = [];
         readonly DrawPassId drawPassId;
-
+        
         /// <summary>
         ///     Adds a component to the actor following the IComponent contract.
         ///     Component initializer will fire before being added.
         /// </summary>
         /// <param name="component">The component to be added to the actor</param>
-        /// ///
         /// <typeparam name="T">T follows contract IComponent</typeparam>
         /// <returns>The initiated component</returns>
         public T AddComponent<T>(T component) where T : IComponent {
@@ -25,7 +24,7 @@ namespace Project_Template.Source.Core.Behaviours {
             }
 
             component.Initialize(this);
-            components.TryAdd(typeof(T), component);
+            components.Add(typeof(T), component);
             componentList.Add(component);
             return component;
         }
