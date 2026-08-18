@@ -5,7 +5,7 @@ using Project_Template.Source.Data.Interfaces;
 namespace Project_Template.Source.Core.Behaviours {
     public abstract class SceneBehaviour : IScene {
         public ScenePipeline Scene { get; private set; }
-        DrawPass drawPass;
+        DrawPass.DrawPass drawPass;
         DependencyScope scope;
 
         public void Initialize() {
@@ -30,7 +30,7 @@ namespace Project_Template.Source.Core.Behaviours {
         ///     Override this method to configure batches and draw passes for the scene.
         /// </remarks>
         /// <returns>The draw pass used by the scene.</returns>
-        public virtual DrawPass ConfigureDrawPass() => new();
+        public virtual DrawPass.DrawPass ConfigureDrawPass() => new();
 
         public virtual void Load() {
         }

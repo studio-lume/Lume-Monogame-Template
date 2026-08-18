@@ -1,5 +1,4 @@
-using Microsoft.Xna.Framework.Graphics;
-using Project_Template.Source.Core;
+using Project_Template.Source.Core.DrawPass;
 
 namespace Project_Template.Source.Data.Interfaces {
     public interface IActorInternal {
@@ -18,7 +17,7 @@ namespace Project_Template.Source.Data.Interfaces {
         public void Update(float deltaTime) {
         }
 
-        public void Draw(SpriteBatch spriteBatch) {
+        public void Draw(Drawer drawer) {
         }
     }
 }

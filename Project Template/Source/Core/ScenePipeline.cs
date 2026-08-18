@@ -4,9 +4,9 @@ using Project_Template.Source.Data.Interfaces;
 namespace Project_Template.Source.Core {
     public class ScenePipeline : IScenePipeline, IScenePipelineInternal {
         readonly DependencyScope dependencyScope;
-        readonly DrawPass drawPass;
+        readonly DrawPass.DrawPass drawPass;
 
-        public ScenePipeline(DependencyScope dependencyScope, DrawPass drawPass) {
+        public ScenePipeline(DependencyScope dependencyScope, DrawPass.DrawPass drawPass) {
             this.dependencyScope = dependencyScope;
             this.drawPass = drawPass;
 
@@ -59,7 +59,7 @@ namespace Project_Template.Source.Core {
         ///     otherwise, <see langword="false" />.
         /// </returns>
         public bool TryGetService<T>(out T service) where T : class =>
-            dependencyScope.TryGetService<T>(out service);
+            dependencyScope.TryGetService(out service);
 
         void IScenePipelineInternal.ClearDrawPasses() => drawPass.ClearPasses();
 

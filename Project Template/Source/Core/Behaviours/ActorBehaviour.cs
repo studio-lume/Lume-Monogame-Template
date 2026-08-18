@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
+using Project_Template.Source.Core.DrawPass;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
 using Project_Template.Source.Services.LoggerService;
@@ -11,8 +11,7 @@ namespace Project_Template.Source.Core.Behaviours {
         static readonly LoggerService LoggerService = new();
         readonly Dictionary<Type, IComponent> components = [];
         readonly List<IComponent> componentList = [];
-        readonly DrawPassId drawPassId;
-        
+
         /// <summary>
         ///     Adds a component to the actor following the IComponent contract.
         ///     Component initializer will fire before being added.
@@ -96,8 +95,8 @@ namespace Project_Template.Source.Core.Behaviours {
         ///     Registers the actor to the selected drawPassId passed through the constructor.
         /// </summary>
         /// <param name="drawPass">The drawPass Instance of the scene</param>
-        void IActorInternal.CoreRegisterDrawPass(DrawPass drawPass) =>
-            drawPass.RegisterActors(drawPassId, this);
+        void IActorInternal.CoreRegisterDrawPass(DrawPass.DrawPass drawPass) =>
+            drawPass.RegisterActors(this);
 
         /// <summary>
         ///     Ends all the components inside the actor
@@ -107,12 +106,6 @@ namespace Project_Template.Source.Core.Behaviours {
                 component.End();
             }
         }
-
-        /// <summary>
-        ///     Creates an instance of an of actor and assigns it to a drawPass
-        /// </summary>
-        /// <param name="drawPassId">The drawPass the actor will be assigned to</param>
-        protected ActorBehaviour(DrawPassId drawPassId) => this.drawPassId = drawPassId;
 
         //-----------------------------------------------------------//
         // Filler functions for filling in actors
@@ -133,7 +126,7 @@ namespace Project_Template.Source.Core.Behaviours {
         public virtual void Update(float deltaTime) {
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch) {
+        public virtual void Draw(Drawer drawer) {
         }
     }
 }

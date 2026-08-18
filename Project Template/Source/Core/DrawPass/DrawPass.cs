@@ -1,14 +1,12 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Components;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
-using Project_Template.Source.Data.Interfaces._Project.Scripts.Data.Interfaces;
 using Project_Template.Source.Services.LoggerService;
 
-namespace Project_Template.Source.Core {
+namespace Project_Template.Source.Core.DrawPass {
     enum DrawPassOrderType {
         DrawPass,
         SpriteBatch
@@ -23,8 +21,8 @@ namespace Project_Template.Source.Core {
     );
 
     public class DrawPass {
-        static readonly LoggerService LoggerService = new LoggerService();
-        readonly Dictionary<DrawPassId, List<IActor>> passes = [];
+        static readonly LoggerService LoggerService = new();
+        readonly List<IActor> registeredActors = [];
         readonly List<DrawPassDefinition> definitions = [];
         SpriteBatch spriteBatch;
 
@@ -90,10 +88,6 @@ namespace Project_Template.Source.Core {
         /// <summary>
         ///     Updates all the actors inside each DrawPass
         /// </summary>
-        /// <remarks>
-        ///     The flow of updating follow the drawPassIds chronologically.
-        ///     This means drawPass 1 will be updated before drawPass 2
-        /// </remarks>
         /// <param name="deltaTime">The time elapsed since last frame</param>
         public void Update(float deltaTime) {
             foreach (var definition in definitions) {
@@ -101,11 +95,7 @@ namespace Project_Template.Source.Core {
                     continue;
                 }
 
-                if (!passes.TryGetValue(definition.DrawPassId, out var actors)) {
-                    continue;
-                }
-
-                foreach (var actor in actors) {
+                foreach (var actor in registeredActors) {
                     ((IActorInternal)actor).CoreUpdateComponents(deltaTime);
                     actor.Update(deltaTime);
                 }
@@ -113,7 +103,7 @@ namespace Project_Template.Source.Core {
         }
 
         /// <summary>
-        ///     Adds multiple actors to a selected drawPass.
+        ///     Registers multiple actors to the drawPass Pipeline
         ///     If the actor is already added, an error message will be thrown.
         /// </summary>
         /// <remarks>
@@ -122,77 +112,61 @@ namespace Project_Template.Source.Core {
         ///     Or alternatively with an array:
         ///     <code>DrawPass.RegisterActors(id, [actorA, actorB, actorC...])</code>
         /// </remarks>
-        /// <param name="drawPass">The drawPassId where the new actors will be assigned to</param>
+        /// ///
         /// <param name="actors">The list of actors which will be added to the drawPass</param>
-        public void RegisterActors(DrawPassId drawPass, params IActor[] actors) {
-            passes.TryAdd(drawPass, []);
+        public void RegisterActors(params IActor[] actors) {
             foreach (var actor in actors) {
-                if (passes[drawPass].Contains(actor)) {
+                if (registeredActors.Contains(actor)) {
                     LoggerService.Log(
                         LogLevel.Error,
                         LogCategory.Core,
                         "Actor already exists",
                         new LoggerContext()
                             .AddSection("Actor Information")
-                            .Add("Actor Type", actor.GetType().Name)
-                            .AddSection("Draw Pass Information")
-                            .Add("Draw Pass ID", drawPass));
+                            .Add("Actor Type", actor.GetType().Name));
                 }
 
-                passes[drawPass].Add(actor);
+                registeredActors.Add(actor);
                 actor.Start();
             }
         }
 
         /// <summary>
-        ///     Removes multiple actors from a drawPass.
+        ///     Removes multiple actors from a registeredActors list within the drawPass pipeline.
         ///     If an actor doesn't exist, and error message will be thrown.
         /// </summary>
         /// <remarks>
         ///     The function can either be called as:
-        ///     <code>DrawPass.UnregisterActors(id, actorA, actorB, ActorC...)</code>
+        ///     <code>DrawPass.UnregisterActors(actorA, actorB, ActorC...)</code>
         ///     Or alternatively with an array:
-        ///     <code>DrawPass.UnregisterActors(id, [actorA, actorB, actorC...])</code>
+        ///     <code>DrawPass.UnregisterActors([actorA, actorB, actorC...])</code>
         /// </remarks>
-        /// <param name="drawPassId">The id of the drawPass where the actors are located</param>
         /// <param name="actors">The list of actors which should be removed from the drawPass</param>
-        public void UnregisterActors(DrawPassId drawPassId, params IActor[] actors) {
-            if (!passes.TryGetValue(drawPassId, out var passActors)) {
-                LoggerService.Log(
-                    LogLevel.Error,
-                    LogCategory.Core,
-                    "Actor doesn't exists",
-                    new LoggerContext()
-                        .AddSection("Draw Pass Information")
-                        .Add("Draw Pass ID", drawPassId));
-                throw new(); // to shut up rider
-            }
-
+        public void UnregisterActors(params IActor[] actors) {
             foreach (var actor in actors) {
-                if (!passActors.Remove(actor)) {
-                    continue;
+                if (!registeredActors.Remove(actor)) {
+                    LoggerService.Log(
+                        LogLevel.Error,
+                        LogCategory.Core,
+                        "Actor doesn't exists",
+                        new LoggerContext()
+                            .AddSection("Actor Information")
+                            .Add("Actor type", actor.GetType().Name));
                 }
 
                 ((IActorInternal)actor).CoreEndComponents();
                 actor.End();
             }
-
-            if (passActors.Count == 0) {
-                passes.Remove(drawPassId);
-            }
         }
 
         /// <summary>
-        ///     Empties all the passes within the current DrawPass Object
+        ///     Empties all the registered actors within the drawPass object
         /// </summary>
         public void ClearPasses() {
-            foreach (var pass in passes)
-            foreach (var actor in pass.Value) {
+            foreach (var actor in registeredActors) {
                 ((IActorInternal)actor).CoreEndComponents();
                 actor.End();
             }
-
-            passes.Clear();
         }
 
         /// <summary>
@@ -202,9 +176,45 @@ namespace Project_Template.Source.Core {
             spriteBatch ??= new(Global.GraphicsDevice);
             var batchIsActive = false;
 
+            // we gather all the draw requirements from each actor
+            // and store it in a pass object
+            // Later we'll use the drawPassId of each call to sort and draw to the screen
+            DrawPassPass pass = new();
+            Drawer drawer = new(pass);
+            foreach (var actor in registeredActors) {
+                actor.Draw(drawer);
+            }
+
             foreach (var passDefinition in definitions) {
                 if (passDefinition.Type == DrawPassOrderType.DrawPass) {
-                    DrawPassToScreen(passDefinition.DrawPassId, spriteBatch);
+                    if (!pass.DrawOrder.TryGetValue(passDefinition.DrawPassId, out var drawInstancesList)) {
+                        continue;
+                    }
+
+                    foreach (var drawInstance in drawInstancesList) {
+                        if (drawInstance.DestinationRectangle != default) {
+                            spriteBatch.Draw(
+                                drawInstance.Texture2D,
+                                drawInstance.DestinationRectangle,
+                                drawInstance.SourceRectangle,
+                                drawInstance.Color,
+                                drawInstance.Rotation,
+                                drawInstance.Origin,
+                                drawInstance.SpriteEffects,
+                                drawInstance.DepthLayer);
+                        } else {
+                            spriteBatch.Draw(
+                                drawInstance.Texture2D,
+                                drawInstance.Position,
+                                drawInstance.SourceRectangle,
+                                drawInstance.Color,
+                                drawInstance.Rotation,
+                                drawInstance.Origin,
+                                drawInstance.Scale,
+                                drawInstance.SpriteEffects,
+                                drawInstance.DepthLayer);
+                        }
+                    }
                 } else {
                     if (batchIsActive) {
                         spriteBatch.End();
@@ -221,16 +231,6 @@ namespace Project_Template.Source.Core {
             }
 
             spriteBatch?.End();
-        }
-
-        void DrawPassToScreen(DrawPassId drawPass, SpriteBatch spriteBatch) {
-            if (!passes.TryGetValue(drawPass, out var passActors)) {
-                return;
-            }
-
-            foreach (var actor in passActors) {
-                actor.Draw(spriteBatch);
-            }
         }
     }
 }

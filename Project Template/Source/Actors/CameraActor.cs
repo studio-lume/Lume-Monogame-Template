@@ -6,7 +6,7 @@ using Project_Template.Source.Core.Behaviours;
 using Project_Template.Source.Data.Enums;
 
 namespace Project_Template.Source.Actors {
-    public class CameraActor() : ActorBehaviour(DrawPassId.Test) {
+    public class CameraActor() : ActorBehaviour {
         Camera camera;
         Transform transform;
 

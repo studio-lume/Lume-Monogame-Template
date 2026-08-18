@@ -2,12 +2,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Components;
 using Project_Template.Source.Core.Behaviours;
+using Project_Template.Source.Core.DrawPass;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
-using Project_Template.Source.Services.LoggerService;
 
 namespace Project_Template.Source.Actors {
-    public class TestActor(IActorService service, ILoggerService loggerService) : ActorBehaviour(DrawPassId.Test) {
+    public class TestActor(IActorService service, ILoggerService loggerService) : ActorBehaviour {
         public Transform Transform;
         public Sprite Sprite;
 
@@ -20,8 +20,9 @@ namespace Project_Template.Source.Actors {
             Transform.Rotation += 0.01f;
         }
 
-        public override void Draw(SpriteBatch spriteBatch) {
-            spriteBatch.Draw(
+        public override void Draw(Drawer drawer) {
+            drawer.Draw(
+                DrawPassId.Test,
                 Sprite.GetTexture(),
                 Transform.Bounds,
                 null,
