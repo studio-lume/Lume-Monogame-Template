@@ -1,9 +1,12 @@
 using System;
 using Microsoft.Xna.Framework;
 using Project_Template.Source.Core.Behaviours;
+using Project_Template.Source.Data.Enums;
+using Project_Template.Source.Services.LoggerService;
 
 namespace Project_Template.Source.Components {
     public class Camera(int renderPriority) : ComponentBehaviour {
+        static readonly LoggerService LoggerService = new();
         static Camera currentScoped;
         static event Action OnCameraChanged;
 
@@ -36,7 +39,11 @@ namespace Project_Template.Source.Components {
 
         public override void Initialize(ActorBehaviour actor) {
             if (!actor.TryGetComponent(out Transform transform)) {
-                throw new("Cannot add Camera component. Transform component is needed");
+                LoggerService.Log(
+                    LogLevel.Error,
+                    LogCategory.Actor,
+                    "Cannot add Camera component. Transform component is needed",
+                    new LoggerContext());
             }
 
             this.transform = transform;

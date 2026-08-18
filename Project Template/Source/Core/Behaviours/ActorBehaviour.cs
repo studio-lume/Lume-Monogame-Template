@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
+using Project_Template.Source.Services.LoggerService;
 using IComponent = Project_Template.Source.Data.Interfaces.IComponent;
 
 namespace Project_Template.Source.Core.Behaviours {
     public abstract class ActorBehaviour : IActor, IActorInternal {
+        static readonly LoggerService LoggerService = new();
         readonly Dictionary<Type, IComponent> components = [];
         readonly List<IComponent> componentList = [];
         readonly DrawPassId drawPassId;
@@ -20,7 +22,13 @@ namespace Project_Template.Source.Core.Behaviours {
         /// <returns>The initiated component</returns>
         public T AddComponent<T>(T component) where T : IComponent {
             if (components.ContainsKey(typeof(T))) {
-                throw new($"Component of type {typeof(T)} is already present");
+                LoggerService.Log(
+                    LogLevel.Error,
+                    LogCategory.Actor,
+                    "Component is already present on Actor",
+                    new LoggerContext()
+                        .AddSection("Actor Information")
+                        .Add("Component name", typeof(T).Name));
             }
 
             component.Initialize(this);
