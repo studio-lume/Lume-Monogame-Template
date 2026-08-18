@@ -23,9 +23,9 @@ namespace Project_Template.Source.Services.LoggerService {
         public void SetCategory(LogCategory category, bool isEnabled) {
             if (isEnabled) {
                 enabledCategories.Add(category);
-            } else {
-                enabledCategories.Remove(category);
-            } 
+                return;
+            }
+            enabledCategories.Remove(category);
         }
 
         /// <summary>
