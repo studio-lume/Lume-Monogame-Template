@@ -66,20 +66,49 @@ namespace Project_Template.Source.Components {
             }
         }
 
-        public Matrix GetViewMatrix() {
-            var viewport = Global.GraphicsDevice.Viewport;
-            return Matrix.CreateTranslation(
-                       -transform.Position.X,
-                       -transform.Position.Y,
-                       0f
-                   ) *
-                   Matrix.CreateRotationZ(-transform.Rotation) *
-                   Matrix.CreateScale(Zoom, Zoom, 1f) *
-                   Matrix.CreateTranslation(
-                       viewport.Width * 0.5f,
-                       viewport.Height * 0.5f,
-                       0f
-                   );
+        public Rectangle WorldBounds {
+            get {
+                var inverseView = Matrix.Invert(ViewMatrix);
+
+                var topLeft = Vector2.Transform(
+                    Vector2.Zero,
+                    inverseView
+                );
+
+                var viewport = Global.GraphicsDevice.Viewport;
+                var bottomRight = Vector2.Transform(
+                    new(
+                        viewport.Width,
+                        viewport.Height
+                    ),
+                    inverseView
+                );
+
+                return new(
+                    (int)MathF.Floor(topLeft.X),
+                    (int)MathF.Floor(topLeft.Y),
+                    (int)MathF.Ceiling(bottomRight.X - topLeft.X),
+                    (int)MathF.Ceiling(bottomRight.Y - topLeft.Y)
+                );
+            }
+        }
+
+        public Matrix ViewMatrix {
+            get {
+                var viewport = Global.GraphicsDevice.Viewport;
+                return Matrix.CreateTranslation(
+                           -transform.Position.X,
+                           -transform.Position.Y,
+                           0f
+                       ) *
+                       Matrix.CreateRotationZ(-transform.Rotation) *
+                       Matrix.CreateScale(Zoom, Zoom, 1f) *
+                       Matrix.CreateTranslation(
+                           viewport.Width * 0.5f,
+                           viewport.Height * 0.5f,
+                           0f
+                       );
+            }
         }
     }
 }

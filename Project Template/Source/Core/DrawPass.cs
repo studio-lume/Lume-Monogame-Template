@@ -195,7 +195,7 @@ namespace Project_Template.Source.Core {
                         passDefinition.SpriteSortMode,
                         passDefinition.BlendState ?? BlendState.AlphaBlend,
                         passDefinition.SamplerState ?? SamplerState.PointClamp,
-                        transformMatrix: Camera.Current?.GetViewMatrix() ?? new Matrix()
+                        transformMatrix: Camera.Current?.ViewMatrix ?? new Matrix()
                     );
                 }
             }
