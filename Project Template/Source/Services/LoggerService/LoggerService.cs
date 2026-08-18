@@ -49,9 +49,8 @@ namespace Project_Template.Source.Services.LoggerService {
                     continue;
                 }
 
-                var sectionName = section.Key.ToUpper().Replace(' ', '_');
-                stringBuilder.Append($"{Environment.NewLine}{sectionName}:");
-
+                stringBuilder.Append($"{Environment.NewLine}{section.Key}:");
+                
                 foreach (var instance in section.Value) {
                     var stringifiedValue = LoggerStringify.Stringify(instance.Value);
                     stringBuilder.Append($"{Environment.NewLine}   {instance.Key}: {stringifiedValue}");
