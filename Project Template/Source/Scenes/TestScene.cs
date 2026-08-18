@@ -21,6 +21,8 @@ namespace Project_Template.Source.Scenes {
             .AddPass(DrawPassId.Blocks);
 
         public override void Load() {
+            Scene.Create<CameraActor>();
+
             for (var x = 0; x < 20; x++)
             for (var y = 0; y < 20; y++) {
                 Scene.Create<TestActor>().Transform.Position = new(x * 100, y * 100);

@@ -3,22 +3,28 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
+using IComponent = Project_Template.Source.Data.Interfaces.IComponent;
 
 namespace Project_Template.Source.Core.Behaviours {
     public abstract class ActorBehaviour : IActor, IActorInternal {
         readonly Dictionary<Type, IComponent> components = [];
         readonly List<IComponent> componentList = [];
         readonly DrawPassId drawPassId;
-
+        
         /// <summary>
         ///     Adds a component to the actor following the IComponent contract.
         ///     Component initializer will fire before being added.
         /// </summary>
         /// <param name="component">The component to be added to the actor</param>
+        /// <typeparam name="T">T follows contract IComponent</typeparam>
         /// <returns>The initiated component</returns>
-        protected T AddComponent<T>(T component) where T : IComponent {
+        public T AddComponent<T>(T component) where T : IComponent {
+            if (components.ContainsKey(typeof(T))) {
+                throw new($"Component of type {typeof(T)} is already present");
+            }
+
             component.Initialize(this);
-            components.TryAdd(component.GetType(), component);
+            components.Add(typeof(T), component);
             componentList.Add(component);
             return component;
         }
@@ -27,13 +33,12 @@ namespace Project_Template.Source.Core.Behaviours {
         ///     Tries to fetch a component by its type. If it succeeds, it returns the component.
         ///     If not, the return type is false, flagging the operation as failed.
         /// </summary>
-        /// <param name="componentType">The type of the component which should be fetched</param>
         /// <param name="component">The component from fetched from the list</param>
         /// <typeparam name="T">T follows contract IComponent</typeparam>
         /// <returns>If true, the operation is successful, if not, then it indicates the operation has failed</returns>
-        protected bool TryGetComponent<T>(Type componentType, out T component) where T : IComponent {
+        public bool TryGetComponent<T>(out T component) where T : IComponent {
             component = default;
-            if (!components.TryGetValue(componentType, out var actorComponent)) {
+            if (!components.TryGetValue(typeof(T), out var actorComponent)) {
                 return false;
             }
 
@@ -46,12 +51,14 @@ namespace Project_Template.Source.Core.Behaviours {
         }
 
         /// <summary>
-        ///     Removes a component from the actor.
+        ///     Removes a component from the actor
         /// </summary>
-        /// <param name="component">The component which should be removed</param>
-        protected void RemoveComponent<T>(T component) where T : IComponent {
-            components.Remove(component.GetType());
-            componentList.Remove(component);
+        /// <typeparam name="T">The type of Component</typeparam>
+        public void RemoveComponent<T>() where T : IComponent {
+            if (components.Remove(typeof(T), out var component)) {
+                componentList.Remove(component);
+                component.End();
+            }
         }
 
         /// <summary>
@@ -59,7 +66,7 @@ namespace Project_Template.Source.Core.Behaviours {
         /// </summary>
         /// <param name="componentType">The type of component which should be checked</param>
         /// <returns>Returns true if the component is attached to the actor, returns false if not</returns>
-        protected bool HasComponent(Type componentType) => components.ContainsKey(componentType);
+        public bool HasComponent(Type componentType) => components.ContainsKey(componentType);
 
         //-----------------------------------------------------------//
         // Actor internal. Used for handling things going on behind the actor
@@ -83,6 +90,15 @@ namespace Project_Template.Source.Core.Behaviours {
         /// <param name="drawPass">The drawPass Instance of the scene</param>
         void IActorInternal.CoreRegisterDrawPass(DrawPass drawPass) =>
             drawPass.RegisterActors(drawPassId, this);
+
+        /// <summary>
+        ///     Ends all the components inside the actor
+        /// </summary>
+        void IActorInternal.CoreEndComponents() {
+            foreach (var component in componentList) {
+                component.End();
+            }
+        }
 
         /// <summary>
         ///     Creates an instance of an of actor and assigns it to a drawPass

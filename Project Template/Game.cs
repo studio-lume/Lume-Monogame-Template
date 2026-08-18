@@ -49,5 +49,7 @@ namespace Project_Template {
 
             base.Draw(gameTime);
         }
+
+        protected override void EndRun() => Global.SceneManager.UnloadAllScenes();
     }
 }

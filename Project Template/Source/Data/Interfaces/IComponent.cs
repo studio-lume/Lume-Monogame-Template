@@ -7,5 +7,8 @@ namespace Project_Template.Source.Data.Interfaces {
 
         public void Update(float deltaTime) {
         }
+
+        public void End() {
+        }
     }
 }

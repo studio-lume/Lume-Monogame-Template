@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
@@ -58,6 +59,18 @@ namespace Project_Template.Source.Core {
                 activeScenes.RemoveAt(i);
                 activeSceneTypes.Remove(typeof(T));
                 return;
+            }
+        }
+
+        /// <summary>
+        ///     Unloads all current active scenes
+        /// </summary>
+        public void UnloadAllScenes() {
+            foreach (var scene in activeScenes.ToList()) {
+                scene.Unload();
+                ((IScenePipelineInternal)scene.Scene).ClearDrawPasses();
+                activeScenes.Remove(scene);
+                activeSceneTypes.Remove(scene.GetType());
             }
         }
 

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Project_Template.Source.Components;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
 using Project_Template.Source.Data.Interfaces._Project.Scripts.Data.Interfaces;
@@ -167,9 +169,12 @@ namespace Project_Template.Source.Core {
             }
 
             foreach (var actor in actors) {
-                if (passActors.Remove(actor)) {
-                    actor.End();
+                if (!passActors.Remove(actor)) {
+                    continue;
                 }
+
+                ((IActorInternal)actor).CoreEndComponents();
+                actor.End();
             }
 
             if (passActors.Count == 0) {
@@ -183,6 +188,7 @@ namespace Project_Template.Source.Core {
         public void ClearPasses() {
             foreach (var pass in passes)
             foreach (var actor in pass.Value) {
+                ((IActorInternal)actor).CoreEndComponents();
                 actor.End();
             }
 
@@ -208,7 +214,8 @@ namespace Project_Template.Source.Core {
                     spriteBatch.Begin(
                         passDefinition.SpriteSortMode,
                         passDefinition.BlendState ?? BlendState.AlphaBlend,
-                        passDefinition.SamplerState ?? SamplerState.PointClamp
+                        passDefinition.SamplerState ?? SamplerState.PointClamp,
+                        transformMatrix: Camera.Current?.ViewMatrix ?? new Matrix()
                     );
                 }
             }
