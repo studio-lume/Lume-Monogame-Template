@@ -4,7 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/hugod/Documents/Projects/Lume-Monogame-Template/Project Template/Content/sample_texture.png</File>
+    <File>C:/Users/hugod/Documents/Lume-Monogame-Template/Project Template/Content/sample_texture.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

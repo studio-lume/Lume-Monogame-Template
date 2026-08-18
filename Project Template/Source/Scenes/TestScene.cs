@@ -4,12 +4,14 @@ using Project_Template.Source.Core.Behaviours;
 using Project_Template.Source.Core.DependencyInjector;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
-using Project_Template.Source.Services;
+using Project_Template.Source.Services.ActorService;
+using Project_Template.Source.Services.LoggerService;
 
 namespace Project_Template.Source.Scenes {
     public class TestScene : SceneBehaviour {
         public override DependencyScope RegisterDependencies() => new DependencyInjector()
             .AddService<IActorService, ActorService>()
+            .AddService<ILoggerService, LoggerService>()
             .End();
 
         public override DrawPass ConfigureDrawPass() => new DrawPass()

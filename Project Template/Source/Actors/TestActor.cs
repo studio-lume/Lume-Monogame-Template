@@ -4,9 +4,10 @@ using Project_Template.Source.Components;
 using Project_Template.Source.Core.Behaviours;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
+using Project_Template.Source.Services.LoggerService;
 
 namespace Project_Template.Source.Actors {
-    public class TestActor(IActorService service) : ActorBehaviour(DrawPassId.Test) {
+    public class TestActor(IActorService service, ILoggerService loggerService) : ActorBehaviour(DrawPassId.Test) {
         public Transform Transform;
         public Sprite Sprite;
 
