@@ -3,15 +3,12 @@ using Microsoft.Xna.Framework.Input;
 using Project_Template.Source.Components;
 using Project_Template.Source.Core;
 using Project_Template.Source.Core.Behaviours;
-using Project_Template.Source.Data.Enums;
 
 namespace Project_Template.Source.Actors {
-    public class CameraActor() : ActorBehaviour {
+    public class CameraActor : ActorBehaviour {
         Camera camera;
-        Transform transform;
 
         public override void Start() {
-            transform = AddComponent(new Transform());
             camera = AddComponent(new Camera(100));
         }
 
@@ -42,7 +39,7 @@ namespace Project_Template.Source.Actors {
             const float speed = 500f;
             movement = movement * speed * deltaTime;
 
-            transform.Position += new Vector2I(movement.X, movement.Y);
+            Transform.Position += new Vector2I(movement.X, movement.Y);
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
 using Project_Template.Source.Core.Behaviours;
-using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Services.LoggerService;
 
 namespace Project_Template.Source.Components {
@@ -38,15 +37,7 @@ namespace Project_Template.Source.Components {
         Transform transform;
 
         public override void Initialize(ActorBehaviour actor) {
-            if (!actor.TryGetComponent(out Transform transform)) {
-                LoggerService.Log(
-                    LogLevel.Error,
-                    LogCategory.Actor,
-                    "Cannot add Camera component. Transform component is needed",
-                    new LoggerContext());
-            }
-
-            this.transform = transform;
+            transform = actor.Transform;
             OnCameraChanged += OnCameraChangedComponent;
 
             SetActive(true);
@@ -76,7 +67,6 @@ namespace Project_Template.Source.Components {
         public Rectangle WorldBounds {
             get {
                 var inverseView = Matrix.Invert(ViewMatrix);
-
                 var topLeft = Vector2.Transform(
                     Vector2.Zero,
                     inverseView

@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project_Template.Source.Components;
+using Project_Template.Source.Core.Behaviours;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
 using Project_Template.Source.Services.LoggerService;
@@ -23,6 +25,7 @@ namespace Project_Template.Source.Core.DrawPass {
     public class DrawPass {
         static readonly LoggerService LoggerService = new();
         readonly List<IActor> registeredActors = [];
+        readonly List<IActor> culledActors = [];
         readonly List<DrawPassDefinition> definitions = [];
         SpriteBatch spriteBatch;
 
@@ -90,15 +93,17 @@ namespace Project_Template.Source.Core.DrawPass {
         /// </summary>
         /// <param name="deltaTime">The time elapsed since last frame</param>
         public void Update(float deltaTime) {
-            foreach (var definition in definitions) {
-                if (definition.Type != DrawPassOrderType.DrawPass) {
+            culledActors.Clear();
+            foreach (var actor in registeredActors) {
+                ((IActorInternal)actor).CoreUpdateComponents(deltaTime);
+                actor.Update(deltaTime);
+
+                var behaviour = (ActorBehaviour)actor;
+                if (!Camera.Current.WorldBounds.Intersects(behaviour.Transform.AABB)) {
                     continue;
                 }
 
-                foreach (var actor in registeredActors) {
-                    ((IActorInternal)actor).CoreUpdateComponents(deltaTime);
-                    actor.Update(deltaTime);
-                }
+                culledActors.Add(actor);
             }
         }
 
@@ -161,7 +166,9 @@ namespace Project_Template.Source.Core.DrawPass {
 
         /// <summary>
         ///     Empties all the registered actors within the drawPass object
-        /// </summary>
+        ///     <summary>
+        ///         Empties all the registered actors within the drawPass object
+        ///     </summary>
         public void ClearPasses() {
             foreach (var actor in registeredActors) {
                 ((IActorInternal)actor).CoreEndComponents();
@@ -181,7 +188,8 @@ namespace Project_Template.Source.Core.DrawPass {
             // Later we'll use the drawPassId of each call to sort and draw to the screen
             DrawPassPass pass = new();
             Drawer drawer = new(pass);
-            foreach (var actor in registeredActors) {
+            Console.WriteLine(culledActors.Count);
+            foreach (var actor in culledActors) {
                 actor.Draw(drawer);
             }
 

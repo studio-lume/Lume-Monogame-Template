@@ -8,11 +8,9 @@ using Project_Template.Source.Data.Interfaces;
 
 namespace Project_Template.Source.Actors {
     public class TestActor(IActorService service, ILoggerService loggerService) : ActorBehaviour {
-        public Transform Transform;
         public Sprite Sprite;
 
         public override void Start() {
-            Transform = AddComponent(new Transform());
             Sprite = AddComponent(new Sprite("sample_texture"));
         }
 

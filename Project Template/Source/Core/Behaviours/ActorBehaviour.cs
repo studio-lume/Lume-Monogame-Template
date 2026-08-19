@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Project_Template.Source.Components;
 using Project_Template.Source.Core.DrawPass;
 using Project_Template.Source.Data.Enums;
 using Project_Template.Source.Data.Interfaces;
@@ -9,6 +10,8 @@ using IComponent = Project_Template.Source.Data.Interfaces.IComponent;
 namespace Project_Template.Source.Core.Behaviours {
     public abstract class ActorBehaviour : IActor, IActorInternal {
         static readonly LoggerService LoggerService = new();
+        public readonly Transform Transform = new();
+
         readonly Dictionary<Type, IComponent> components = [];
         readonly List<IComponent> componentList = [];
 
